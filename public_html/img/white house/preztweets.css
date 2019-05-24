@@ -1,0 +1,218 @@
+.navbar-default
+.navbar-nav>li>a {
+	color: green;
+}
+
+.navbar-brand{
+	padding:0px;
+	
+}
+
+
+.navbar, .navbar-default, .nav, .navbar-nav{
+	/*text-align:center;*/
+	padding: 0px 20px;
+}
+
+.navbar-fixed-top{
+	margin: 0 auto;
+	margin-top:1px;
+	/*padding: 20px 20px;*/
+	
+}
+.navbar-nav > li{
+  padding-left:30px;
+  padding-right:20px;
+}
+.nav > li > a:hover{
+    background-color:#A52A2A;
+    color:#A52A2A;
+    /*font-size:30px;*/
+}
+
+.container {position:relative;}
+.row {clear: both;}
+.fr div {float: left; width: 75px; margin-bottom: 20px}
+.header{z-index:10;background-color:white;padding-top:0px;}	
+
+.header .row{ /*position: fixed;*/ background: yellow;}
+.table {height: 200px; overflow-y: auto; overflow-x: hidden}
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+p{
+margin-bottom:0px;
+}
+
+/*.navbar-collapse.collapse {
+    display: block!important;
+}
+.navbar-nav>li, .navbar-nav {
+    float: left !important;
+}
+.navbar-right {
+    float: right!important;
+}
+.navbar-toggle {
+    display: none;
+}*/
+
+
+body {
+  padding-top: 200px;
+}
+
+
+
+/* Extra Small */
+@media(max-width:767px){
+	body{
+		padding-top:220px;
+	}
+}
+
+/* Small */
+@media(min-width:768px) and (max-width:991px){
+	body {
+    padding-top: 280px;
+  }
+}
+/* Medium */
+@media(min-width:992px) and (max-width:1199px){
+	body {
+    padding-top: 240px;
+  }
+}
+/* Large */
+@media(min-width:1200px){}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.col-md-1{
+padding:0px;	
+}
+
+.row {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+
+
+
+
+.container{
+	margin: 0px auto;
+	margin-top:5px;
+	padding-left: 0px;
+	padding-right: 0px;
+	border-radius: 12px;
+}
+
+ul  li{
+	display: inline-block;
+	padding-left:10px;
+}
+
+ul{
+	list-style: none;
+	padding: 0px;
+	text-align:left;
+}
+.created_at{
+	color:green;
+}
+
+
+
+.date_menu_fixed{
+	width: 1200px;
+	position:fixed;
+	margin-top: 0px;
+	border-radius: 12px;
+}
+
+.date_menu_container{
+	border-radius: 12px;
+	width: 1200px;
+	margin: 0 auto;		
+	margin-top: 0px;
+	margin-bottom: 20px;
+}
+
+.print_tweets{
+	padding-left:50px;
+	margin: 0px 200px;
+}
+
+.grad {
+    background: red; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#f9d6d9, #d6f6f9); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#f9d6d9, #d6f6f9); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#f9d6d9, #d6f6f9); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#f9d6d9, #d6f6f9; /* Standard syntax */
+   	border-radius: 50px;
+   	
+}
+
+
+/*.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+    /*visibility: hidden;*/
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}*/
+
+
+.marquee p{
+	
+text-align:right;
+}
+
+.h-scroll {
+    height: 90px; /* %-height of the viewport */
+    position: fixed;
+    overflow-y: scroll;
+}
