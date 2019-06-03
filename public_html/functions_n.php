@@ -16,7 +16,8 @@ function get_news_source($news_sources, $id){
 
 
 function get_news_sources($category, $country, $language){
-  $news_sources = get_curl('https://newsapi.org/v2/sources?language='.$language.'&country='.$country.'&category='.$category.'&apiKey=44e5ca1e7d1d461bbfc466448884c1c9','');
+  
+  $news_sources = get_curl('https://newsapi.org/v2/sources?language='.$language.'&country='.$country.'&category='.$category.'&apiKey=9b2e87cd02c24b0b9f38ab7fb6d56a55','');
   return $news_sources;
 }
 
@@ -35,31 +36,34 @@ function get_news_sources($category, $country, $language){
 // 	
 // }	
 
-function get_articles($news_sources_ids, $search, $category, $country){
-	  
-	$articles_groups = [get_curl('https://newsapi.org/v2/top-headlines?sources='.$news_sources_ids.'&q='.$search.'&pageSize=50&page=1&apiKey=44e5ca1e7d1d461bbfc466448884c1c9')];
-	//printr($articles_groups[0]['totalResults']);
+function get_articles($news_sources_ids, $category, $country){
+  // printr($news_sources_ids);
+	$articles_groups = get_curl('https://newsapi.org/v2/top-headlines?sources='.$news_sources_ids.'&apiKey=9b2e87cd02c24b0b9f38ab7fb6d56a55', '');
+ 	// printr($articles_groups[articles]);
 	
-  foreach($articles_groups[0]['articles'] as $article_group){
+  foreach($articles_groups['articles'] as $article_group){
   	$articles[] = $article_group;
-	}
+  }
+  // printr($articles[0]);
 	
-	$articles_groups1 = [get_curl('https://newsapi.org/v2/top-headlines?country='.$country.'&category='.$category.'&q='.$search.'&pageSize=50&page=1&apiKey=44e5ca1e7d1d461bbfc466448884c1c9')];
-	 foreach($articles_groups1[0]['articles'] as $article_group){
+	$articles_groups1= get_curl('https://newsapi.org/v2/top-headlines?country='.$country.'&category='.$category.'&q='.$search.'&pageSize=50&page=1&apiKey=9b2e87cd02c24b0b9f38ab7fb6d56a55', '');
+	 foreach($articles_groups1['articles'] as $article_group){
   	$articles1[] = $article_group;
-	}
-	 
+  }
+  // printr($articles1[0]);
+
 	
-	if(!empty($articles)){
+	if(!empty($articles1)){
 		
 		$articles = array_merge($articles, $articles1);
 	}else{
-		$articles = $articles1;
+   
+		$articles = $articles;
 	}
 
-	
-	$articles= array_unique($articles, SORT_REGULAR);
-	//printr($articles);
+  // echo 'there';
+	// $articles= array_unique($articles, SORT_REGULAR);
+	// printr($articles);  
 	return $articles;
 }
 
@@ -157,7 +161,7 @@ function print_news_sources($main_menu, $category, $country, $language, $news_so
   foreach($news_sources as $news_source){
   	//printr($news_source['url']);
     if($id == $news_source['id']){$class_selected = 'source-selected';}else{$class_selected = ' ';}?>
-      <a href="?main_menu=<?php echo $main_menu; ?>&category=<?php echo $category;?>&country=<?php echo $country;?>&language=<?php echo $language;?>&id=<?php echo$news_source['id'];?>&desc=<?php echo $news_source['description'];?>&url=<?php echo $news_source['url'];?>">
+      <a href="index.php?main_menu=<?php echo $main_menu; ?>&category=<?php echo $category;?>&country=<?php echo $country;?>&language=<?php echo $language;?>&id=<?php echo $news_source['id'];?>&desc=<?php echo $news_source['description'];?>&url=<?php echo $news_source['url'];?>">
         <span> 
           <li class = "<?php echo 'independent'.' '.$class_selected;?>">
           	

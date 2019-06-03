@@ -1,7 +1,7 @@
 <?php
 	include 'functions.php';
-  // include 'functions_n.php';
-	// include 'variables.php';
+  include 'functions_n.php';
+	include 'variables.php';
 	
 ?>						  	
 <!DOCTYPE html>
@@ -14,6 +14,7 @@
 		  <!--///////////////SUB MENU YELLOW///////////////////////////////----->
 		  
 			<div class="row"><?php 
+			//  echo $main_menu;
 			 if($main_menu == 'news'){?>
   			<div class="col-sm-3 col-xs-3 row-no-padding"><?php
   		 }
@@ -48,12 +49,12 @@
 				    		<input type="hidden" name="category" value="<?php echo $category; ?>">
 				    		<input type="hidden" name="country" value="<?php echo $country; ?>">
 				   			<input type="hidden" name="language" value="<?php echo $language; ?>">
-				    		
-				    	 <div>
-							  <input type="checkbox" name="source_type" 
-							  <?php if(isset($source_type) && $source_type=="journalists") echo "checked"; ?>
+				    	
+							<?php /* ?>
+							$source_type=="journalists") echo "checked"; ?>
 							  value="journalists" onchange="this.form.submit();"> journalists
-							  </div>
+								</div>
+							<?php */ ?>
 							</form>
 					</div>
 		  		

@@ -46,11 +46,11 @@ if($main_menu == 'news'){
 	  ////////////countries/////////////
 		$countries = [''=>'world', 'gb'=>'united_kingdom', 'us'=>'united states', 'ar'=>'argentina', 'au'=>'australia', 'br'=>'brazil', 'ca'=>'canada', 'cn'=>'china', 'fr'=>'france', 'de'=>'germany', 'hk'=>'hong_kong', 'in'=>'india', 'ie'=>'ireland', 'il'=>'israel', 'it'=>'italy', 'nl'=>'netherlands', 'no'=>'norway', 'ru'=>'russia', 'sa'=>'saudia_arabia', 'za'=>'south_africa', 'es'=>'spain', 'se'=>'sweden'];
 		
-		$country = 'us';
+		$country = 'us';	
 	  if(isset($_GET['country'])){
 	    $country = $_GET['country'];
 	  } 
-		
+		// printr($country);
 		
 		////////////////languages///////////
 		$languages = [''=>'all languages', 'en'=>'english', 'ar'=>'arabic', 'zh'=>'chinese','nl'=>'dutch', 'de'=>'german', 'fr'=>'french', 'he'=>'hebrew', 'it'=>'italian', 'no'=>'norwegian',  'pt'=>'portugese', 'ru'=>'russian',	'es'=>'spanish', 'se'=>'sweden', 'ud'=>'urdu'];
@@ -62,11 +62,11 @@ if($main_menu == 'news'){
 	
 	if(isset($_GET['search'])&&$category !== 'advanced'){
   	$search = ($_GET['search']);
-		// $category='all';
-		// $country='';
-		// $language='';
-  	// list($articles) = get_articles_keyword($search, '', '');
-// 		
+		$category='all';
+		$country='';
+		$language='';
+  	list($articles) = get_articles_keyword($search, '', '');
+		
 	}
 	
 	
@@ -80,7 +80,7 @@ if($main_menu == 'news'){
 			$news_sources = get_news_sources($category, $country, $language);
 			$news_sources = $news_sources['sources'];
 		}
-
+	
 		foreach($news_sources as $news_source){
 				$news_sources_ids[]=($news_source['id']);
 			}
@@ -93,8 +93,10 @@ if($main_menu == 'news'){
 	      $id = $_GET['id'];
 	      $articles = get_articles_author($articles, $name);
 				
-	    }
+			}
+		// }
   	}else{
+			
 			if($category == "health/science"){
 				$news_sources_health = get_news_sources('health', $country, $language);
 			  $news_sources_science = get_news_sources('science', $country, $language);
@@ -102,37 +104,47 @@ if($main_menu == 'news'){
 			}else{
 				$news_sources = get_news_sources($category, $country, $language);
 				$news_sources = $news_sources['sources'];
-				//printr($news_sources);
+				// printr($news_sources);
 			}
+		
 	
 			if(isset($_GET['id'])){
 				$id = $_GET['id'];
 			  $desc = $_GET['desc'];
 				$url = $_GET['url'];
+				// echo 'here';
 				$articles = get_articles($id, $search, $category, $country);
 			}else{
+					
 			  $name = '';
 			  $id = '';
-			  $desc = '';
+				$desc = '';
+				
 				foreach($news_sources as $news_source){
+					
 					$news_sources_ids[]=($news_source['id']);
+				
 				}
-				$news_sources_ids = (implode(",", $news_sources_ids));
+				// printr($country);
+				// echo ($category);
+				$news_sources_ids_imp = (implode(",", $news_sources_ids));
+			
+				// printr($news_sources_ids_imp);
 			//	printr($news_sources_ids);
-			  $articles = get_articles($news_sources_ids, $search, $category, $country);
-				//printr($articles);
+			  $articles = get_articles($news_sources_ids_imp, $category, $country);
+	// 			//rintr($articles);
 		
 			}
-		}
+		
 
 
 	
 	$articles = sort_news_atoz($articles, ('publishedAt'));
-	//printr($articles);
-  $articles = array_reverse($articles);  
+	// printr($articles);
+  // $articles = array_reverse($articles);  
 	
-	if($category == ''){
-		$category = 'all';
+	// if($category == ''){
+	// 	$category = 'all';
 	}
 		
 	

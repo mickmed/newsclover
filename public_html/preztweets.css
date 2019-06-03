@@ -35,6 +35,8 @@ ul, p{
 	padding-left: 0px;
 	padding-right: 0px;
 	border-radius: 12px;
+	width:1200px;
+	height:100vh;
 }
 
 .main{
@@ -118,7 +120,7 @@ a.navbar-brand > img{
 	padding-left:10px;
 	padding-top:1px;
 	margin-bottom:10px;
-	color:green;
+	color:green;	
 	font-size:12px;
 	background-color:#fcf699;
 	

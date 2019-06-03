@@ -21,10 +21,9 @@ function print_sub_menu($main_menu, $countries, $select_menu_country, $languages
 
 function print_sub_menu1($category, $country, $country_value, $search, $articles, $country_key){?>
 	
-	<?php echo ($articles).' articles ';?>
 	<img style ="height:20px" src="http://www.geonames.org/flags/x/<?php echo $country_key;?>.gif">
 	<?php 
-	
+	 echo ($articles).' articles ';
 	if(!empty($search)){?> 
  		<a href="?category=<?php echo 'all';?>&country=<?php echo $country;?>&language=<?php echo '';?>">
 	  	<button class="pull-right"><?php echo $search;?><img class = "button-cross" src="cross.png"></button>
