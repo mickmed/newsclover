@@ -1,75 +1,91 @@
 <?php
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////NEWS STUFF////////////////////////////////////////////
+
+function get_news_sources($category, $country){
+  $news_sources = get_curl('https://newsapi.org/v2/sources?country='.$country.'&category='.$category.'&apiKey=b0b0ec73a4cb4bd1b9f4a62d6071ad81','');
+  return $news_sources;
+}
+
+
+function get_headlines_by_elements($category, $country, $search){
+	// echo $search;
+	// echo $country;
+	// echo $category;
+		$headlines_groups = [get_curl('https://newsapi.org/v2/top-headlines?country='.$country.'&category='.$category.'&q='.$search.'&pageSize=100&page=1&apiKey=b0b0ec73a4cb4bd1b9f4a62d6071ad81', '')];
+		// printr($headlines_groups[0]);
+		
+	 foreach($headlines_groups[0]['articles'] as $headline_group){
+  	$sources_by_elements[] = $headline_group['source'];
+		$headlines_by_elements[] = $headline_group;
+	 }
+	 return [$sources_by_elements, $headlines_by_elements];
+}
+
+
+function get_headlines_by_source_ids($news_sources_ids, $search){
+//	printr($search);
+//printr($news_sources_ids);
+	$headlines_groups = [get_curl('https://newsapi.org/v2/top-headlines?sources='.$news_sources_ids.'&q='.$search.'&pageSize=50&page=1&apiKey=c3294c69f1e7404e8f2c4f49f63246c5')];
+	//printr($articles_groups[0]['totalResults']);
+	foreach($headlines_groups[0]['articles'] as $headline_group){
+  	 $headlines_by_source_ids[] = $headline_group;
+		 $sources_by_source_ids[] = $headline_group['source'];
+	}
+	return($headlines_by_source_ids);
+}
+
+
+
+function get_everything_by_url_and_id($url, $id, $search){
+//echo $url; echo $id;
+	$everything_groups = [get_curl('https://newsapi.org/v2/everything?sources='.$id.'&domains='.$url.'&q='.$search.'&pageSize=50&page=1&apiKey=c3294c69f1e7404e8f2c4f49f63246c5')];
+	//printr($articles_groups[0]['totalResults']);
+	
+  foreach($everything_groups[0]['articles'] as $everything_group){
+  	$sources_by_url_and_id[] = $everything_group['source'];
+  	$everything_by_url_and_id[] = $everything_group;
+	}
+	return [$sources_by_url_and_id, $everything_by_url_and_id ];
+}
+
+
+
+
+
+
 function get_news_source($news_sources, $id){
-	//printr($news_sources);
-  foreach($news_sources as $news_source){
+	foreach($news_sources as $news_source){
     if($id == $news_source['id']){
       $source[] = $news_source;
       
     }
   } 
-	//printr($source);
-  return $source;
+	return $source;
 }
 
-
-function get_news_sources($category, $country, $language){
-  
-  $news_sources = get_curl('https://newsapi.org/v2/sources?language='.$language.'&country='.$country.'&category='.$category.'&apiKey=9b2e87cd02c24b0b9f38ab7fb6d56a55','');
-  return $news_sources;
-}
-
-
-// function get_articles_keyword($keyword, $category, $country){
-// 
-	// $news_sources_temp = get_news_sources('','','');
-	// $articles_groups = [get_curl('https://newsapi.org/v2/top-headlines?sources=bbc-news&q='.$keyword.'&pageSize=100&apiKey=44e5ca1e7d1d461bbfc466448884c1c9')];
-// 
-	// foreach($articles_groups[0]['articles'] as $article_group){
-		// $articles[] = $article_group;
-	// }
-	// //printr(array_unique($news_sources, SORT_REGULAR));
-	// //printr($articles);
-	// return [$articles];
-// 	
-// }	
-
-function get_articles($news_sources_ids, $category, $country){
-  // printr($news_sources_ids);
-	$articles_groups = get_curl('https://newsapi.org/v2/top-headlines?sources='.$news_sources_ids.'&apiKey=9b2e87cd02c24b0b9f38ab7fb6d56a55', '');
- 	// printr($articles_groups[articles]);
+function get_articles_news_source($id, $search){
 	
-  foreach($articles_groups['articles'] as $article_group){
+	$articles_groups = [get_curl('https://newsapi.org/v2/top-headlines?sources='.$id.'&q='.$search.'&pageSize=50&page=1&apiKey=c3294c69f1e7404e8f2c4f49f63246c5')];
+	//printr($articles_groups[0]['totalResults']);
+	
+  foreach($articles_groups[0]['articles'] as $article_group){
   	$articles[] = $article_group;
-  }
-  // printr($articles[0]);
-	
-	$articles_groups1= get_curl('https://newsapi.org/v2/top-headlines?country='.$country.'&category='.$category.'&q='.$search.'&pageSize=50&page=1&apiKey=9b2e87cd02c24b0b9f38ab7fb6d56a55', '');
-	 foreach($articles_groups1['articles'] as $article_group){
-  	$articles1[] = $article_group;
-  }
-  // printr($articles1[0]);
-
-	
-	if(!empty($articles1)){
-		
-		$articles = array_merge($articles, $articles1);
-	}else{
-   
-		$articles = $articles;
 	}
-
-  // echo 'there';
-	// $articles= array_unique($articles, SORT_REGULAR);
-	// printr($articles);  
 	return $articles;
 }
 
+
+
+
+
+
+
 function get_icon($id, $news_sources){
+	
 	foreach($news_sources as $news_source){
+		
 		if($news_source['id'] == $id){
+			
 			$icon_url = $news_source['url'];
 		}
 	}
@@ -79,7 +95,7 @@ function get_icon($id, $news_sources){
 function get_authors($articles){
   foreach($articles as $article){
   	if(!empty($article['author'])){
-    	$authors[] = ltrim(rtrim($article['author'])).' ('.$article['source'][name].')';
+    	$authors[] = ltrim(rtrim($article['author'])).' ('.$article['source']['name'].')';
     }
   }
   $authors = array_unique($authors);
@@ -89,7 +105,9 @@ function get_authors($articles){
 
 function get_articles_author($articles, $name){
   foreach($articles as $article){
-    if($name == ltrim(rtrim($article[0]['author'])).' ('.$article[0]['source']['name'].')'){
+  	
+    if($name == ltrim(rtrim($article['author'])).' ('.$article['source']['name'].')'){
+    	
       $author_articles[] = $article;
     }
   } 
@@ -113,106 +131,174 @@ function sort_news_atoz($array, $key){
 ///////////////////////////////////PRINT NEWS STUFF///////////////////////////////////////////////////////////////
 
 
-function print_news_articles($main_menu, $articles, $top_word, $news_articles_class, $news_sources){?>
-	
-	<?php //printr($articles);?>
-  <div class = "row">
-    <div class="col-sm-12 col-xs-12 row-no-padding">
-   
-      <ul class = "row pre-scrollable news-articles <?php echo $news_articles_class?>"><?php  
-        if(!isset($_GET['top'])){          
-          foreach($articles as $article){?>
-    
-            <a target="_blank" href = "<?php echo $article['url'];?>"> 
-            <li class="col-sm-2 col-xs-2 row-no-padding">
-              <img style="width:90%" src="<?php echo $article['urlToImage'];?>" alt="">
-            </li>
-            <li class="col-sm-7 col-xs-7 row-no-padding">
-              <p><?php echo($article['title']);?></p>
-            </li>
-            
-            <li class="col-sm-2 col-xs-2 row-no-padding news-icon">
-            	<?php $icon_url=get_icon($article['source']['id'],$news_sources);
-            	if(!empty($icon_url)){?>
-	            	<!-- https://icons.better-idea.org/icon?url=<?php echo $article[1];?>&size=70..120..200 -->
-	              <img class="news-categories-pic" alt=""
-	            	src="https://besticon-demo.herokuapp.com/icon?url=<?php echo $icon_url;?>/&size=80..120..200">
-            	<?php
-							}else{?>
-								<div class="pull-right" style="font-size:9px;"><?php
-								echo($article['source']['name']);?>
-								</div>
-							<?php
-								
-							}?>
-            </li>
-            </a><?php
-          }
-        }?>
-      </ul>
-    </div>
-  </div>
-  <?php
-}
-
-
-function print_news_sources($main_menu, $category, $country, $language, $news_sources, $id){?>
-  <ul class="news-list"><?php
+function print_news_sources($category, $country, $language, $news_sources, $name){
+	//printr($news_sources);
+	?>
+		
+  <ul class="pre-scrollable news-source-list"><?php
+  
+  
   foreach($news_sources as $news_source){
-  	//printr($news_source['url']);
-    if($id == $news_source['id']){$class_selected = 'source-selected';}else{$class_selected = ' ';}?>
-      <a href="index.php?main_menu=<?php echo $main_menu; ?>&category=<?php echo $category;?>&country=<?php echo $country;?>&language=<?php echo $language;?>&id=<?php echo $news_source['id'];?>&desc=<?php echo $news_source['description'];?>&url=<?php echo $news_source['url'];?>">
-        <span> 
-          <li class = "<?php echo 'independent'.' '.$class_selected;?>">
-          	
-          	
-            <img class="news-categories-pic" alt="" 
-            src="https://besticon-demo.herokuapp.com/icon?url=<?php echo ($news_source['url']);?>/&size=80..120..200">
-            
-            <div><?php echo $news_source['name'];?></div>
-          </li>
-        </span>
-      </a> 
+  	if(isset($news_source['url'])){
+			$icon_url = $news_source['url'];
+		}elseif(isset($news_source['name'])){
+			$icon_url = $news_source['name'];
+		}elseif(empty($news_source['id'])){
+			$icon_url = $news_source(strtolower)['name'];
+			//printr($icon_url);
+		}else{
+			 //$sources=get_news_sources('','','');
+			 $icon_url = $icon_url=get_icon($news_source['id'], $sources['sources']);
+			//printr($icon_url);
+		}
+
+	
+		if(strtolower($name) == (strtolower($news_source['name']))){$class_selected = 'source-selected';}else{$class_selected = '';}?>
+      <a href="?category=<?php echo $category;?>&country=<?php echo $country;?>&id=<?php echo $news_source['id'];?>&name=<?php echo $news_source['name'];?>&desc=<?php echo $news_source['description'];?>&url=<?php echo str_replace(["http://www.", "https://www.", "http://"], "", $icon_url);?>">
+     		<li class = "<?php echo 'independent'.' '.$class_selected;?>">
+  				<div class="col-sm-2 col-xs-2 row-no-padding news-source-img">
+  				
+      			<img class="news-categories-pic" alt="<?php echo $news_source['name'];?>" 
+      			src="https://besticon-demo.herokuapp.com/icon?url=<?php echo $icon_url;?>&size=80..120..200">
+       		 </div>
+     
+			     <div class="col-sm-9 col-xs-9 row-no-padding source-name">
+			    	 <div><?php echo $news_source['name'];?></div>
+			     </div>
+			   </li>
+     	</a> 
     <?php
-  }?>
+  }?>	
   </ul><?php
 }
 
-  
-function print_news_authors($main_menu, $category, $country, $authors, $author_name, $source_type){?>
+
+
+function print_news_authors($category, $country, $authors, $author_name, $source_type){?>
   <ul><?php
   //printr($authors);
     foreach($authors as $author){
     	
       if($author_name == $author){$class_selected = 'source-selected';}else{$class_selected = ' ';}?>
-      <a href="?author_name=<?php echo $author;?>&main_menu=<?php echo $main_menu ?>&category=<?php echo $category;?>&country=<?php echo $country;?>&source_type=<?php echo $source_type;?>">
+      <a href="?author_name=<?php echo $author;?>&category=<?php echo $category;?>&country=<?php echo $country;?>&source_type=<?php echo $source_type;?>">
         <span> 
           <li class = "<?php echo 'news_menu_list'.' '.$class_selected;?>">
             <?php echo $author;?>
-          </li>
+          </li><br><br>
         </span>
       </a><?php
     }?>
   </ul><?php
 }
 
-function print_news_source_description($id, $desc, $url){
-  ?>
- 
-  <ul class="news-description">
-    <div class = "row">
-      <div class="col-sm-1 col-xs-2 row-no-padding">
-        
-        <img class="news-categories-pic" alt="" src="https://besticon-demo.herokuapp.com/icon?url=<?php echo $url;?>&size=70..120..200">
-        
-      </div>
-      <div class="col-sm-11 col-xs-10 row-no-padding">
-        <?php echo ($desc); ?>
-      </div>
+
+
+function print_news_source_description($id, $desc, $url){?>
+	<div class="news-description hidden-xs">
+  	<div class="col-sm-1 col-xs-2 row-no-padding">
+    	<img class="news-categories-pic" alt="" src="https://besticon-demo.herokuapp.com/icon?url=<?php echo $url;?>&size=70..120..200">
     </div>
-  </ul><?php
-  
+    <div class="col-sm-11 col-xs-10 row-no-padding">
+    	<?php echo $desc; ?>
+    </div>
+  </div><?php
+}	
+
+
+function print_author_description($name){?>
+  <div class="author-description">
+  	<div class="col-sm-1 col-xs-2 row-no-padding">
+    </div>
+    <div class="col-sm-11 col-xs-10 row-no-padding">
+      <?php echo ($name); ?>
+    </div>
+  </div><?php
 }
+
+
+function print_news_articles($articles, $top_word, $max_height, $news_sources, $country_value, $category, $search, $rate_limited_message){?>
+	<ul class = "pre-scrollable news-articles <?php echo $max_height?>"><?php  
+      if(isset($rate_limited_message) && !empty($rate_limited_message)){
+				print_rate_limited_message($rate_limited_message);
+			}
+			
+			
+			if(empty($articles)){
+    		print_no_articles_message($country_value, $category, $search);
+      }  
+			
+			
+      foreach($articles as $article){?>
+
+        <a target="_blank" href = "<?php echo $article['url'];?>"> 
+        <li class="col-sm-2 col-xs-12 row-no-padding">
+          <img style="width:90%" src="<?php echo $article['urlToImage'];?>" alt="">
+        </li>
+        <li class="col-sm-7 col-xs-7 row-no-padding">
+          <p><?php echo($article['title']);?></p>
+        </li>
+        
+        <li class="col-sm-2 col-xs-2 row-no-padding news-icon">
+        	<?php $icon_url=get_icon($article['source']['id'], $news_sources);
+					
+        	if(!empty($icon_url)){
+        		$icon_url = $icon_url;
+        	}else{
+        		$icon_url = $article['source']['name'];
+        	}?>
+          	<!-- https://icons.better-idea.org/icon?url=<?php echo $article[1];?>&size=70..120..200 -->
+            <img class="news-categories-pic" alt=""
+          	src="https://besticon-demo.herokuapp.com/icon?url=<?php echo $icon_url;?>&size=80..120..200">
+          	
+       
+        		<div class="hidden-xs" style="font-size:8px;">
+        			<?php echo $article['source']['name'];?>
+						</div>
+				</li>
+        </a><?php
+      }
+   ?>
+  </ul>
+ 
+  
+  <?php
+}
+
+
+function print_no_articles_message($country_value, $category, $search){ 
+	?>
+	<div style="margin:5px 20px 5px 20px;">
+		<?php
+		
+		echo 'sorry, there are no results for:<br><br>';
+		echo 'country: '.$country_value.'<br>';
+		echo 'category: '.$category.'<br>';
+		echo 'search term: '.$search;?>
+	</div>
+	<?php
+}
+  
+
+function print_rate_limited_message($rate_limited_message){ 
+	?>
+	<div style="margin:5px 20px 5px 20px;font-size:20px;">
+		<?php
+		
+		echo $rate_limited_message.'<br><br>';
+		?>
+	</div>
+	<?php
+}
+
+
+
+
+
+
+
+
+
+
 function print_key_words(){?>
      <div class="row">
         <div class="col-sm-12 col-xs-12">

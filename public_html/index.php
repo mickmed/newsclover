@@ -1,143 +1,129 @@
 <?php
-	include 'functions.php';
-  include 'functions_n.php';
-	include 'variables.php';
-	
-?>						  	
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+include 'functions.php';
+include 'functions_n.php';
+include 'variables.php';
+
+?>
 <!DOCTYPE html>
 <html lang="en">
-	<head><?php include 'head.html.php';?></head>
+	<?php include 'head.html.php';?>
 	<body onload="loadDeviceSize()">
-		<div class="container main">	
-		<?php include 'header.php';?>
+		<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) return;
+			js = d.createElement(s); js.id = id;
+			js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.12';
+			fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));
+		</script>
+
+		<div class="container main">
+			<?php include 'header.php';?>
+			<div class="container">
+              	<div class="attribution">&copy2018 NewsClover Web powered by <a href =NewsApi.org>NewsApi.org</a></div>
+  <!-- <iframe src="https://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.newsclover.com&width=450&layout=standard&action=like&size=small&show_faces=true&share=true&height=80&appId" width="450" height="80" style="border:none;overflow:hidden;height:50px" scrolling="no" frameborder="0" allowTransparency="true" ></iframe> -->
+			</div>
 			<div class="body-main">
-		  <!--///////////////SUB MENU YELLOW///////////////////////////////----->
-		  
-			<div class="row"><?php 
-			//  echo $main_menu;
-			 if($main_menu == 'news'){?>
-  			<div class="col-sm-3 col-xs-3 row-no-padding"><?php
-  		 }
-       ?>
-  		  
-  			  
-    		  <div class = "sub-menu">
-    		  
-    		   	<form action="index.php" class="form-group">
-					    <input type="hidden" name="main_menu" value="<?php echo $main_menu; ?>">
-					    <input type="hidden" name="category" value="<?php echo $category; ?>">
-					    
-					    <select  name="country"  onchange="this.form.submit();" id="select_menu_country"> 
-					      <?php 
-					    
-					      foreach($countries as $k=>$v){?>
-					        <option <?php if($country == $k){echo 'selected="selected"';$country_value=$v;$country_key = $k;}?> value=<?php echo $k;?>><?php echo $v;?></option> 
-					        	<?php
-					      }
-					      ?>                     
-					    </select>
-    
-   
-					    <!-- <select name="language"  onchange="this.form.submit();" id="select_menu_language">
-					      <?php foreach($languages as $k=>$v){?>
-					        <option <?php if($language == $k){echo 'selected="selected"'; $lang=$v;}?> value=<?php echo $k;?>><?php echo $v;?></option><?php
-					      }?>                     
-					    </select> -->
-					  </form>
-					   <form action="" class="source_type">
-            		<input type="hidden" name="main_menu" value="<?php echo $main_menu; ?>">
-				    		<input type="hidden" name="category" value="<?php echo $category; ?>">
-				    		<input type="hidden" name="country" value="<?php echo $country; ?>">
-				   			<input type="hidden" name="language" value="<?php echo $language; ?>">
-				    	
-							<?php /* ?>
-							$source_type=="journalists") echo "checked"; ?>
-							  value="journalists" onchange="this.form.submit();"> journalists
-								</div>
-							<?php */ ?>
-							</form>
+				<!-------------------SUB MENU YELLOW------------------------------->
+				<div class="row">
+
+
+					<div class="col-xs-12 row-no-padding sub-menu pull-right hidden-sm hidden-md hidden-lg hidden-xl">
+						<?php print_sub_menu_mobile($categories, $countries, $category, $country, $name);?>
 					</div>
-		  		
-		  		
-		  		
-		  		<div class ="row">
-						
-				      <!--------------------------MENU-LIST--------------------------->
-             
-					
-              <div class="pre-scrollable col-sm-12 col-xs-12 row-no-padding pre-scrollable-news-list" id="menu-list">
-              	
-                <?php 
-                 if($main_menu == 'news'){
-                 	//printr($news_sources);
-                  if($source_type !== 'journalists'){
-                    print_news_sources($main_menu, $category, $country, $language, $news_sources, $id);
-                  }else{
-                    print_news_authors($main_menu, $category, $country, $authors, $name, $source_type);
-                  }
-                }
-                ?> 
-              </div>
-            	
-  				</div>
+
+					<div class="col-sm-3 col-xs-3 row-no-padding hidden-xs">
+						<div class = "sub-menu">
+			    		<?php list($country_value, $country_key) = print_sub_menu($category, $countries, $country);?>
+						</div>
+					</div>
+					<div class="col-sm-9 col-xs-9 row-no-padding hidden-xs">
+						<div class = "sub-menu1">
+	            		<?php print_sub_menu1($categories, $countries, $category, $country, $country_value, $search, count($articles), $country_key, $name, $url, $id);?>
+				    </div>
 				</div>
-				    
-				<!-- /////////////////////////////////////////////// NEWS PRINT/////////////////////////////////-->
-			 <?php
+			</div>
 
-       if($main_menu == 'news'){?>
-        <div class="col-sm-9 col-xs-9 row-no-padding">
-        <div class = "sub-menu1">
-        	<?php print_sub_menu1($category, $country, $country_value, $search, count($articles), $country_key);?>
-			  </div>
-			  <?php
-       }?>
-      <div class="row"><?php
-          if($main_menu == 'news'){
-            if(!empty($desc)){
-              print_news_source_description($id, $desc, $url);
-              $news_articles_class = 'pre-scrollable-news-articles';
-            }
-					
-              print_news_articles($main_menu, $articles, $top_word, $news_articles_class, $news_sources);
-          }
-          
-         
-            //include 'counter.php';?>
-          </div></div> 
-			  </div>
-		  </div>
-	  
-   
+
+			 
+			  <!--------------------------SOURCE-LIST--------------------------->
+ 				<div class="row">
+			 		<div class="col-sm-3 col-xs-3 row-no-padding">
 
 
 
-                
-		<!--Footer-->
-		<!-- <footer class="page-footer blue center-on-small-only">
-		  <div class="container-fluid">
-		    <div class="row">
-		 		  <div class="col-md-12">
-		        <ul id="webTicker" style="padding-left:40px;"><li><?php
-							foreach($articles as $article){?>
-				    		<a target="_blank" href = "<?php echo $article['url'];?>"><?php echo($article['title']).' - '.$article['source'].'&nbsp&nbsp&nbsp&nbsp';?></a><?php
-							}?></li>
-						</ul>
+			  	 	<div class ="row">
+				  		<?php source_checkbox($category, $country, $source_type);?>
+							<div class="col-sm-12 col-xs-12 row-no-padding source-list" id="menu-list">
+								<div class="row">
+									<?php 
+									echo ($language);
+									if ($source_type !== 'journalists') {
+										print_news_sources($category, $country, $language, $news_sources, $name);
+									} else {
+										print_news_authors($category, $country, $authors, $name, $source_type);
+									}
+									?>
+	              </div>
+	            </div>
+	          </div>
+	        </div>
+
+				<!----------------------------NEWS-LIST--------------------------------->
+
+				  <div class="col-sm-9 col-xs-9 row-no-padding shoonga">
+
+
+	       	  <div class="row">
+	       	  	<?php
+if (!empty($desc)) {
+    print_news_source_description($id, $desc, $url);
+    $max_height = 'max-height';
+}
+if (isset($_GET['author_name'])) {
+    print_author_description($name);
+    $max_height = 'max-height';
+}
+?>
+	          </div>
+
+          	<div class="row">
+	          	<div class="col-sm-12 col-xs-12 row-no-padding"><?php
+
+// print_news_articles($articles, $top_word, $max_height, $news_sources, $country_value, $category, $search, $rate_limited_message);
+?>
+	            </div>
+        	 	</div>
+
+
+        	</div>
+        </div>
+         <div id="footer">
+		      <div class="container">
+							<div class="attribution">
+<div class="fb-like" data-href="http://www.newsclover.com" data-layout="button" data-action="like" data-size="small" data-show-faces="false" data-share="true"></div>
+ </div>
+  <!-- <iframe src="https://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.newsclover.com&width=450&layout=standard&action=like&size=small&show_faces=true&share=true&height=80&appId" width="450" height="80" style="border:none;overflow:hidden;height:50px" scrolling="no" frameborder="0" allowTransparency="true" ></iframe> -->
+
+
+
 		      </div>
 		    </div>
-		    <!--Copyright-->
-		    <!-- <div class="footer-copyright">
-		      <div class="container-fluid">
-		        © 2015 Copyright: <a href="https://www.NewsClover.com"> NewsClover.com </a>
-		        
-		      </div>
-		    </div>
-		    <!--/.Copyright-->
-			<!-- </div>
-		</footer>  --> 
-	</div>
-</body>
+      </div>
+		</div>
+  </body>
 </html>
+
+
+
+
+
 
 
 
@@ -149,8 +135,8 @@ $(function() {
 		height:'40px'
 	});
 });
-	
-	
+
+
 
 
 
@@ -171,22 +157,44 @@ $(function() {
 	lang = <?php echo json_encode($language); ?>;
 	$('#select_menu_language').val(lang);
 });
-// 
-// $(function() {
-	// count = <?php echo json_encode($count); ?>;
-	// $('#select_menu_country').val(count);
-// });
-
- 
 
 
 
+$(document).ready(function() {
+  function setHeight() {
+    windowHeight = ($(window).innerHeight())-150;
+    $('.news-source-list').css('min-height', windowHeight);
+  };
+  setHeight();
 
+  $(window).resize(function() {
+    setHeight();
+  });
+});
 
+$(document).ready(function() {
+  function setHeight() {
+    windowHeight = ($(window).innerHeight())-150;
+    $('.news-articles').css('min-height', windowHeight);
+  };
+  setHeight();
 
+  $(window).resize(function() {
+    setHeight();
+  });
+});
 
+$(document).ready(function() {
+  function setHeight() {
+    windowHeight = ($(window).innerHeight())-80;
+    $('.main').css('min-height', windowHeight);
+  };
+  setHeight();
 
-
+  $(window).resize(function() {
+    setHeight();
+  });
+});
 
 </script>
 
