@@ -12,6 +12,7 @@ It is built with PHP and utilizes the [NewsApi](newsapi.org)
 - HTML
 - CSS
 - PHP
+- JQuery
 
   
 
@@ -19,6 +20,7 @@ It is built with PHP and utilizes the [NewsApi](newsapi.org)
 
 ### &#x1F3E1; Deployed
 
+[newsclover](https://newsclover.000webhostapp.com/index.php)
 
 
 

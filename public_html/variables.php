@@ -196,7 +196,7 @@ if (isset($_GET['name']) && !empty($_GET['name'])) {
 	$news_sources = (array_intersect_key($news_sources_temp, $sources_tempArr));
 	//printr($news_sources);
 
-	$articles_temp = array_merge((array)$headlines_by_elements11, (array)$headlines_by_source_id, (array)$everything_by_url_and_id);
+	$articles_temp = array_merge((array)$headlines_by_elements, (array)$headlines_by_source_id, (array)$everything_by_url_and_id);
 	$articles_tempArr = array_unique(array_column($articles_temp, 'title'));
 	$news_articles = (array_intersect_key($articles_temp, $articles_tempArr));
 	$articles = $news_articles;
